@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.firstproject.FirstProjectPDS1.dto.ProductDTO;
 import com.firstproject.FirstProjectPDS1.entities.Product;
@@ -23,6 +24,7 @@ public class ProductService {
 		return list.stream().map(e -> new ProductDTO(e)).collect(Collectors.toList());
 	}	
 	
+	@Transactional
 	public ProductDTO findById(Long id) {
 		Optional<Product> obj = repository.findById(id);
 		Product entity =  obj.orElseThrow(() -> new ResourceNotFoundException(id));
