@@ -2,14 +2,27 @@ package com.firstproject.FirstProjectPDS1.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+
+import org.hibernate.validator.constraints.Length;
+
 import com.firstproject.FirstProjectPDS1.entities.Product;
 
 public class ProductDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	
+	@NotEmpty(message = "can't be empty")
+	@Length(min = 3, max = 80, message = "length must between 5 and 80")
 	private String name;
+	
+	@NotEmpty(message = "can't be empty")
+	@Length(min = 8, message = "length must between 5 and 80")
 	private String description;
+	
+	@Positive
 	private Double price;
 	private String imgUrl;
 	

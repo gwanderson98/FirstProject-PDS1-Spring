@@ -3,6 +3,8 @@ package com.firstproject.FirstProjectPDS1.resources;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +43,7 @@ public class ProductResources {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ProductDTO> insert (@RequestBody ProductCategoriesDTO dto){
+	public ResponseEntity<ProductDTO> insert (@Valid @RequestBody ProductCategoriesDTO dto){
 		ProductDTO newDto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newDto.getId()).toUri();
 		return ResponseEntity.created(uri).body(newDto); 
