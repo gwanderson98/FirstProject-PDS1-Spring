@@ -33,6 +33,12 @@ public class CategoryResources {
 		return ResponseEntity.ok().body(list);
 	}
 	
+	@GetMapping(value = "/product/{productId}")
+	public ResponseEntity<List<CategoryDTO>> findByProduct(@PathVariable Long productId) {
+		List<CategoryDTO> categories = service.findByProduct(productId);
+		return ResponseEntity.ok().body(categories);
+	}
+	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id){
 		CategoryDTO dto = service.findById(id);
