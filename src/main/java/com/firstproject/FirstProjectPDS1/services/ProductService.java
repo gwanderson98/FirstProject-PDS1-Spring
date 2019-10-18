@@ -1,7 +1,9 @@
 package com.firstproject.FirstProjectPDS1.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -21,6 +23,7 @@ import com.firstproject.FirstProjectPDS1.entities.Product;
 import com.firstproject.FirstProjectPDS1.repositories.CategoryRepository;
 import com.firstproject.FirstProjectPDS1.repositories.ProductRepository;
 import com.firstproject.FirstProjectPDS1.services.exceptions.DatabaseException;
+import com.firstproject.FirstProjectPDS1.services.exceptions.ParamFormatException;
 import com.firstproject.FirstProjectPDS1.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -35,7 +38,34 @@ public class ProductService {
 	public Page<ProductDTO> findAllPaged(Pageable pageable){
 		Page<Product> list =  repository.findAll(pageable);
 		return list.map(e -> new ProductDTO(e));
-	}	
+	}
+	
+	public Page<ProductDTO> findByNameCategoryPaged(String name, String categoriesStr, Pageable pageable) {
+		Page<Product> list;
+		if (categoriesStr.equals("")) {
+			list = repository.findByNameContainingIgnoreCase(name, pageable);			
+		} else {
+			List<Long> ids = parseIds(categoriesStr);
+			List<Category> categories = ids.stream().map(id -> categoryRepository.getOne(id))
+					.collect(Collectors.toList());
+			list = repository.findByNameContainingIgnoreCaseAndCategoriesIn(name, categories, pageable);			
+		}
+		return list.map(e -> new ProductDTO(e));
+	}
+	
+	private List<Long> parseIds(String categoriesStr) {
+		String[] idsArray = categoriesStr.split(",");
+		List<Long> list = new ArrayList<>();
+
+		for (String idsStr : idsArray) {
+			try {
+				list.add(Long.parseLong(idsStr));
+			} catch (NumberFormatException e) {
+				throw new ParamFormatException("Invalid category format");
+			}
+		}
+		return list;
+	}
 	
 	
 	public ProductDTO findById(Long id) {
