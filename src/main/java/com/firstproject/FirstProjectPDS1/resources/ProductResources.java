@@ -32,16 +32,24 @@ public class ProductResources {
 	@Autowired
 	private ProductService service;
 	
-	
-	@GetMapping
-	public ResponseEntity<Page<ProductDTO>> findAllPaged(
-			@RequestParam(value="page", defaultValue="0") Integer page,
-			@RequestParam(value="linesPerPage", defaultValue="12") Integer linesPerPage,
-			@RequestParam(value="orderBy", defaultValue="name") String orderBy,
-			@RequestParam(value="direction", defaultValue="ASC") String direction){
-		
-		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		Page<ProductDTO> list = service.findAllPaged(pageRequest);
+	public ResponseEntity<Page<ProductDTO>> findAllPaged(@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderby,
+			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+		PageRequest pagerequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderby);
+		Page<ProductDTO> list = service.findAllPaged(pagerequest);
+		return ResponseEntity.ok().body(list);
+	}
+
+	@GetMapping(value = "/category/{categoryId}")
+	public ResponseEntity<Page<ProductDTO>> findByCategoryPaged(
+			@PathVariable Long categoryId,
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderby,
+			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+		PageRequest pagerequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderby);	
+		Page<ProductDTO> list = service.findByCategoryPaged(categoryId, pagerequest);
 		return ResponseEntity.ok().body(list);
 	}
 	
