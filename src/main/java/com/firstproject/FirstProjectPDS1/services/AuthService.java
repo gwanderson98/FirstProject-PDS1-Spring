@@ -66,5 +66,10 @@ public class AuthService {
 			throw new JWTAuthorizationException("Acess denied!");
 		}
 	}
+	
+	public TokenDTO refreshToken() {
+		User user = authenticated();
+		return new TokenDTO(user.getEmail(), jwtUtil.generateToken(user.getEmail()));
+	}
 
 }
